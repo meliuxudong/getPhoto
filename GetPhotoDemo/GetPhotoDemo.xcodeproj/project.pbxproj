@@ -27,6 +27,7 @@
 		845AE3451F97365A0061A13C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 845AE3441F97365A0061A13C /* UIKit.framework */; };
 		845AE3471F9736650061A13C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 845AE3461F9736650061A13C /* Foundation.framework */; };
 		845AE3491F97366E0061A13C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 845AE3481F97366E0061A13C /* CoreGraphics.framework */; };
+		845AE34B1F974B080061A13C /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 845AE34A1F974B080061A13C /* Photos.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -63,6 +64,7 @@
 		845AE3441F97365A0061A13C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		845AE3461F9736650061A13C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		845AE3481F97366E0061A13C /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		845AE34A1F974B080061A13C /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +72,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				845AE34B1F974B080061A13C /* Photos.framework in Frameworks */,
 				845AE3491F97366E0061A13C /* CoreGraphics.framework in Frameworks */,
 				845AE3471F9736650061A13C /* Foundation.framework in Frameworks */,
 				845AE3451F97365A0061A13C /* UIKit.framework in Frameworks */,
@@ -151,6 +154,7 @@
 		845AE3431F97365A0061A13C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				845AE34A1F974B080061A13C /* Photos.framework */,
 				845AE3481F97366E0061A13C /* CoreGraphics.framework */,
 				845AE3461F9736650061A13C /* Foundation.framework */,
 				845AE3441F97365A0061A13C /* UIKit.framework */,
@@ -408,6 +412,7 @@
 				845AE3221F972DFB0061A13C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

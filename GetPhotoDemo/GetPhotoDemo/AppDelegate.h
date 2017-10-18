@@ -2,7 +2,7 @@
 //  AppDelegate.h
 //  GetPhotoDemo
 //
-//  Created by admin on 2017/10/18.
+//  Created by 刘旭东 on 2017/10/18.
 //  Copyright © 2017年 GetPhoto. All rights reserved.
 //
 

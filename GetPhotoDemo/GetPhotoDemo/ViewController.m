@@ -7,7 +7,6 @@
 //
 
 #import "ViewController.h"
-#import <Photos/Photos.h>
 #import "MyActionSheet.h"
 #import "MBProgressHUD.h"
 
