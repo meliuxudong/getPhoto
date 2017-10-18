@@ -23,9 +23,9 @@
 @end
 
 @interface PhotoGroupDetailModel : NSObject
-@property (nonatomic ,strong) PHAsset *asset;
-@property (nonatomic ,assign) BOOL isSelectState;
-@property (nonatomic ,assign) NSInteger selectNumber;
+@property (nonatomic ,strong) PHAsset *asset;//相片
+@property (nonatomic ,assign) BOOL isSelectState;//是否选中
+@property (nonatomic ,assign) NSInteger selectNumber;//选中序号
 
 @end
 

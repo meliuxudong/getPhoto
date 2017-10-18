@@ -10,6 +10,7 @@ info.plist 中添加以下
 
 
 用了MBProgressHUD 如果程序有问题添加四种框架文件
+
 Photos.framework
 coreGraphics.framework
 Foundation.framework

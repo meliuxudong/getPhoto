@@ -24,7 +24,9 @@
     return self;
 }
 - (void)actionShow{
+    
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    
     UIAlertAction *cancleAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
         [_delegate myActionSheetMutiSelectDelegate:nil info:nil];
     }];
@@ -105,10 +107,7 @@
             
             break;
         }
-        case 2:
-            break;
-        default:
-            break;
+        
     }
 }
 
@@ -125,7 +124,7 @@
 - (void)returnImageDelegate:(NSMutableArray *)array{
     [_delegate myActionSheetMutiSelectDelegate:array info:nil];
     [[self viewController] dismissViewControllerAnimated:YES completion:nil];
-//    [self removeFromSuperview];
+
 }
 #pragma mark - <UIImagePickerControllerDelegate>代理方法
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info{

@@ -16,6 +16,7 @@
 @implementation ViewController
 
 // lazy initialization
+
 - (MyActionSheet *)actionView{
     if (!_actionView) {
         _actionView = [[MyActionSheet alloc]initWithFrame:self.view.frame];
@@ -32,10 +33,8 @@
 }
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    //remove actionView
-    [_actionView removeFromSuperview];
-    _actionView = nil;
     
+    [self removeMyActionSheetView];
 }
 
 - (IBAction)getPhoto:(UIButton *)sender {
@@ -48,11 +47,13 @@
  MyActionSheetDelegate
  
  @param array return array of UIImage
- @param info return Error information
+ @param info return Error
  */
 - (void)myActionSheetMutiSelectDelegate:(NSMutableArray *)array info:(NSString *)info{
     
-    NSLog(@"%@%@",array,info);
+    NSLog(@"image = %@, Error = %@",array,info);
+    
+    [self removeMyActionSheetView];
     
     if (info) {
         MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
@@ -62,9 +63,12 @@
         
         [hud hideAnimated:YES afterDelay:2.f];
         
-        
     }
-    
+}
+//remove actionView
+- (void)removeMyActionSheetView{
+    [_actionView removeFromSuperview];
+    _actionView = nil;
 }
 
 @end

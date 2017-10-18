@@ -18,11 +18,9 @@
 @interface MyActionSheet : UIView
 
 @property (nonatomic, assign) BOOL isEdit;//状态是否可以编辑
-@property (nonatomic, retain) UIButton *btn;
-@property (nonatomic, assign) id<MyActionSheetDelegate>delegate;
 @property (nonatomic, assign) BOOL isMutiSelect;//是否允许多选
-@property (nonatomic, assign) BOOL isShopAlbum;//是否相册
-@property (assign, nonatomic) NSInteger maxPhotoNumber;
+@property (nonatomic, assign) NSInteger maxPhotoNumber;
+@property (nonatomic, weak) id<MyActionSheetDelegate>delegate;
 - (void)actionShow;
 - (void)removeView;
 -(UIImage*)imageWithImage:(UIImage*)image scaledToSize:(CGSize)newSize;
