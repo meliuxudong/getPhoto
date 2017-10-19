@@ -159,7 +159,12 @@
         hud.detailsLabel.text = [NSString stringWithFormat:@"最多可以选取%ld张",(long)_maxPhotoNumber];
         hud.mode = MBProgressHUDModeText;
         
-        [hud hideAnimated:YES afterDelay:2.f];
+        dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+            sleep(2);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [hud hideAnimated:YES];
+            });
+        });
         return;
     }
     

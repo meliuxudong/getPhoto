@@ -56,13 +56,15 @@
     [self removeMyActionSheetView];
     
     if (info) {
-        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
-        hud.label.text = @"温馨提示";
-        hud.detailsLabel.text = info;
-        hud.mode = MBProgressHUDModeText;
-        
-        [hud hideAnimated:YES afterDelay:2.f];
-        
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+            hud.label.text = @"温馨提示";
+            hud.detailsLabel.text = info;
+            hud.mode = MBProgressHUDModeText;
+            [hud hideAnimated:YES afterDelay:2.0f];
+            
+        });
+
     }
 }
 //remove actionView

@@ -56,7 +56,7 @@
     
     UIImagePickerController * mipc = [[UIImagePickerController alloc] init];
     switch (index) {
-        case 1:
+        case 1:{
             // 判断设备是否支持相册
             if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary])
             {
@@ -64,28 +64,40 @@
                 [_delegate myActionSheetMutiSelectDelegate:nil info:@"设备不支持相册功能"];
                 return ;
             }
+            
+            [[PhotoTool sharePhotoTool]requestAuthorizatio:[self viewController] comeplete:^(BOOL state) {
+                if (state) {
+                    if (_isMutiSelect) {
+                        
+                        UIStoryboard * storyboard = [UIStoryboard storyboardWithName:@"PhotoGroup" bundle:nil];
+                        PhotoGroupTableViewController *photoTVC = [storyboard instantiateViewControllerWithIdentifier:@"PhotoGroupTableViewController"];
+                        photoTVC.maxPhotoNumber = self.maxPhotoNumber;
+                        photoTVC.delegate = self;
+                        
+                        
+                        [[self viewController].navigationController pushViewController:photoTVC animated:YES];
+                        
+                    }else{
+                        mipc.sourceType =  UIImagePickerControllerSourceTypePhotoLibrary;
+                        mipc.delegate = self;//委托
+                        mipc.allowsEditing = self.isEdit;//是否可编辑照片
+                        mipc.mediaTypes=[NSArray arrayWithObjects:@"public.image",nil];
+                        // 设置可用媒体类型
+                        [[self viewController] presentViewController:mipc animated:YES completion:^(void){
+                            
+                        }];
+                    }
 
-            if (_isMutiSelect) {
-                
-                UIStoryboard * storyboard = [UIStoryboard storyboardWithName:@"PhotoGroup" bundle:nil];
-                PhotoGroupTableViewController *photoTVC = [storyboard instantiateViewControllerWithIdentifier:@"PhotoGroupTableViewController"];
-                photoTVC.maxPhotoNumber = self.maxPhotoNumber;
-                photoTVC.delegate = self;
-                
-
-                [[self viewController].navigationController pushViewController:photoTVC animated:YES];
-
-            }else{
-            mipc.sourceType =  UIImagePickerControllerSourceTypePhotoLibrary;
-            mipc.delegate = self;//委托
-            mipc.allowsEditing = self.isEdit;//是否可编辑照片
-            mipc.mediaTypes=[NSArray arrayWithObjects:@"public.image",nil];
-            // 设置可用媒体类型
-            [[self viewController] presentViewController:mipc animated:YES completion:^(void){
-   
+                }else{
+                    NSDictionary *mainInfoDictionary = [[NSBundle mainBundle] infoDictionary];
+                    NSString *appName = [mainInfoDictionary objectForKey:@"CFBundleDisplayName"];
+                    
+                    [_delegate myActionSheetMutiSelectDelegate:nil info:[NSString stringWithFormat:@"请在设备的\"设置-隐私-照片\"选项中，允许%@访问你的手机相册", appName]];
+                    return ;
+                }
             }];
-            }
-            break;
+        }
+                     break;
         case 0:{
             if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])
             {

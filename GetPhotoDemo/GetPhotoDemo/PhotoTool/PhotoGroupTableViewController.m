@@ -27,22 +27,8 @@
     [self getPhotoGroup];
 }
 - (void)getPhotoGroup{
-    // 判断授权状态
-    [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
-        if (status != PHAuthorizationStatusAuthorized){
-            NSDictionary *mainInfoDictionary = [[NSBundle mainBundle] infoDictionary];
-            NSString *appName = [mainInfoDictionary objectForKey:@"CFBundleDisplayName"];
-            
-            MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
-            hud.label.text = @"温馨提示";
-            hud.detailsLabel.text = [NSString stringWithFormat:@"请在设备的\"设置-隐私-照片\"选项中，允许%@访问你的手机相册", appName];
-            hud.mode = MBProgressHUDModeText;
-            
-            [hud hideAnimated:YES afterDelay:2.f];
-          return;
-        }
-    }];
-    _photoGroupArray = [[PhotoTool sharePhotoTool]getPhotoAblumList];
+   
+    _photoGroupArray = [[PhotoTool sharePhotoTool]getPhotoAblumList:self];
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
