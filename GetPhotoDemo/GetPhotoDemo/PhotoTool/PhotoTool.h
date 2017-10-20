@@ -30,7 +30,7 @@
 @end
 
 @interface PhotoTool : NSObject
-@property (nonatomic ,strong) UIViewController *vc;
+
 + (instancetype)sharePhotoTool;
 
 /**
@@ -67,12 +67,13 @@
 /**
  * @brief 保存图片到系统相册
  */
-- (void)saveImageToPhotosAlum:(UIImage *)img viewcontroller:(UIViewController *)vc;
+- (NSString *)saveImageToPhotosAlum:(UIImage *)img viewcontroller:(UIViewController *)vc isShow:(BOOL)show;
 
 /**
  * @brief 保存图片到自定义相册
+ * @param alumTitle 相册名
  */
-- (void)saveImageToCustomPhotosAlum:(UIImage *)img viewcontroller:(UIViewController *)vc;
+- (void)saveImageToCustomPhotosAlum:(UIImage *)img alumTitle:(NSString *)alumTitle viewcontroller:(UIViewController *)vc;
 
 /**
  * @brief 判断授权状态

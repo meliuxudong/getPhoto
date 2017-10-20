@@ -75,9 +75,9 @@ static PhotoTool *sharePhotoTool = nil;
     //    }];
 
 //}
-
+#pragma mark - 获取所有智能相册
 - (NSMutableArray<PhotoGroupModel *> *)getSmartAlbums{
-    //获取所有智能相册
+    
     PHFetchResult *smartAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeAlbumRegular options:nil];
     NSMutableArray *photoAblumList = @[].mutableCopy;
     [smartAlbums enumerateObjectsUsingBlock:^(PHAssetCollection * _Nonnull collection, NSUInteger idx, BOOL *stop) {
@@ -98,8 +98,9 @@ static PhotoTool *sharePhotoTool = nil;
 
     return photoAblumList;
 }
+#pragma mark - 从 iTunes 同步来的相册，以及用户在 Photos 中自己建立的相册
 - (NSMutableArray<PhotoGroupModel *> *)getAlbums{
-    //从 iTunes 同步来的相册，以及用户在 Photos 中自己建立的相册
+    
     PHFetchResult *userAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:PHAssetCollectionSubtypeSmartAlbumUserLibrary options:nil];
     NSMutableArray *photoAblumList = @[].mutableCopy;
     [userAlbums enumerateObjectsUsingBlock:^(PHAssetCollection * _Nonnull collection, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -208,49 +209,110 @@ static PhotoTool *sharePhotoTool = nil;
     }];
 }
 
-#pragma mark - 保存图片到系统相册
-- (void)saveImageToPhotosAlum:(UIImage *)img viewcontroller:(UIViewController *)vc{
-    
-    _vc  = vc;
-    
-    UIImageWriteToSavedPhotosAlbum(img, self, @selector(image:didFinishSavingWithError:contextInfo:), NULL);
-}
-//必要实现的协议方法, 不然会崩溃
-- (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo {
-    
-    if(!error) {
-        
-        UIAlertController *alertControl = [UIAlertController alertControllerWithTitle:@"温馨提示" message:@"成功保存到相册" preferredStyle:UIAlertControllerStyleAlert];
-        
-        UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
-            
-        }];
-        
-        [alertControl addAction:action];
-        
-        [_vc presentViewController:alertControl animated:YES completion:nil];
-        
-    }else{
-        UIAlertController *alertControl = [UIAlertController alertControllerWithTitle:@"提示" message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
-        
-        UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-            
-        }];
-        
-        [alertControl addAction:action];
-        
-        [_vc presentViewController:alertControl animated:YES completion:nil];
-        
+//  创建新的相册
+- (PHAssetCollection *)createAssetCollection:(NSString *)alumTitle{
+    NSMutableArray *albums = [self getAlbums];
+    for (PhotoGroupModel *model in albums) {
+        if ([model.assetCollection.localizedTitle isEqualToString:alumTitle]) {
+            //说明已经有对象了
+            return model.assetCollection;
+        }
     }
+    // 新建自定义相册
+    __block NSString *collectionId = nil;
+    NSError *error = nil;
+    [[PHPhotoLibrary sharedPhotoLibrary] performChangesAndWait:^{
+        collectionId = [PHAssetCollectionChangeRequest creationRequestForAssetCollectionWithTitle:alumTitle].placeholderForCreatedAssetCollection.localIdentifier;
+    } error:&error];
+    
+    if (error) {
+        NSLog(@"创建相册【%@】失败", alumTitle);
+        return nil;
+    }
+    
+    return [PHAssetCollection fetchAssetCollectionsWithLocalIdentifiers:@[collectionId] options:nil].lastObject;
 
 }
+#pragma mark - 保存图片到系统相册
+- (NSString *)saveImageToPhotosAlum:(UIImage *)img viewcontroller:(UIViewController *)vc isShow:(BOOL)show{
+    
+    __block  NSString *assetLocalIdentifier = nil;
+    [[PHPhotoLibrary sharedPhotoLibrary]performChanges:^{
+        
+        //1.保存图片到相机胶卷中----创建图片的请求
+        assetLocalIdentifier = [PHAssetCreationRequest creationRequestForAssetFromImage:img].placeholderForCreatedAsset.localIdentifier;
+    } completionHandler:^(BOOL success, NSError * _Nullable error) {
+        
+        if (show) {
+            if(!error) {
+                
+                UIAlertController *alertControl = [UIAlertController alertControllerWithTitle:@"温馨提示" message:@"成功保存到相册" preferredStyle:UIAlertControllerStyleAlert];
+                
+                UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+                    return ;
+                }];
+                
+                [alertControl addAction:action];
+                
+                [vc presentViewController:alertControl animated:YES completion:nil];
+                
+            }else{
+                UIAlertController *alertControl = [UIAlertController alertControllerWithTitle:@"提示" message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+                
+                UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                    return ;
+                }];
+                
+                [alertControl addAction:action];
+                
+                [vc presentViewController:alertControl animated:YES completion:nil];
+                
+            }
+            
+        }
+        
+        
+    }];
+    return assetLocalIdentifier;
+    
 
+}
 #pragma mark - 保存图片到自定义相册
-- (void)saveImageToCustomPhotosAlum:(UIImage *)img viewcontroller:(UIViewController *)vc{
+- (void)saveImageToCustomPhotosAlum:(UIImage *)img alumTitle:(NSString *)alumTitle viewcontroller:(UIViewController *)vc{
+
+    PHAssetCollection *createdAssetCollection = [self createAssetCollection:alumTitle];
+    if (createdAssetCollection == nil) {
+        NSLog(@"(创建相簿失败!)");
+        return;
+    }
     
-    _vc = vc;
+    NSString *assetLocalIdentifier = [self saveImageToPhotosAlum:img viewcontroller:vc isShow:NO];
+    //根据相册的唯一标识符拿到相册
+    createdCollection = [PHAssetCollection fetchAssetCollectionsWithLocalIdentifiers:@[createdCollectionID] options:nil].firstObject;
+    if (error) {
+        //保存失败
+    }else{
+        //保存成功
+    }
     
-    
+    // 3.将刚刚添加到"相机胶卷"中的图片到"自己创建相簿"中
+    [[PHPhotoLibrary sharedPhotoLibrary]performChanges:^{
+        
+        //获得图片
+        PHAsset *asset = [PHAsset fetchAssetsWithLocalIdentifiers:@[assetLocalIdentifier] options:nil].lastObject;
+        //添加图片到相簿中的请求
+        PHAssetCollectionChangeRequest *request = [PHAssetCollectionChangeRequest changeRequestForAssetCollection:createdAssetCollection];
+        // 添加图片到相簿
+        [request addAssets:@[asset]];
+    } completionHandler:^(BOOL success, NSError * _Nullable error) {
+        if(success){
+            NSLog(@"保存图片到创建的相簿成功");
+        }else{
+            NSLog(@"保存图片到创建的相簿失败");
+        }
+    }];
+}];
+
 }
 
 - (void)requestAuthorizatio:(UIViewController *)vc comeplete:(void (^)(BOOL))comeplete{    // 判断授权状态
