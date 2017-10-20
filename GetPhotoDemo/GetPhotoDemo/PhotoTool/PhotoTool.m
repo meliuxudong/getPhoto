@@ -38,41 +38,41 @@ static PhotoTool *sharePhotoTool = nil;
 }
 
 #pragma mark - 获取所有相册列表
-- (NSMutableArray<PhotoGroupModel *> *)getPhotoAblumList:(UIViewController *)vc
+- (void)getPhotoAblumList:(void(^)(NSMutableArray<PhotoGroupModel *> * array))block
 {
-//    // 判断授权状态
-//    [self requestAuthorizatio:vc];
-//    
-
+    //    // 判断授权状态
+    //    [self requestAuthorizatio:vc];
+    //
+    
     NSMutableArray<PhotoGroupModel *> *photoAblumList = [NSMutableArray array];
-  
     [photoAblumList addObjectsFromArray:[self getSmartAlbums]];
+        
     [photoAblumList addObjectsFromArray:[self getAlbums]];
+        
+    
+    if (block) block(photoAblumList);
     
     
-    return photoAblumList;
-    
-   
 }
 #pragma mark - 后续增加
 //- (NSMutableArray<PhotoGroupModel *> *)getMomentAlbums{
-    //    //Photos 为我们自动生成的时间分组的相册
-    //    PHFetchResult<PHAssetCollection *> *collectionResultMoment = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeMoment subtype:PHAssetCollectionSubtypeAlbumRegular options:nil];
-    //    [collectionResultMoment enumerateObjectsUsingBlock:^(PHAssetCollection * _Nonnull collection, NSUInteger idx, BOOL *stop) {
-    //        //过滤掉视频和最近删除
-    //        if (!([collection.localizedTitle isEqualToString:@"Recently Deleted"] ||
-    //              [collection.localizedTitle isEqualToString:@"Videos"])) {
-    //            NSArray<PHAsset *> *assets = [self getAssetsInAssetCollection:collection ascending:NO];
-    //            if (assets.count > 0) {
-    //                PhotoGroupModel *ablum = [[PhotoGroupModel alloc] init];
-    //                ablum.title = [self transformAblumTitle:collection.localizedTitle];
-    //                ablum.count = assets.count;
-    //                ablum.headImageAsset = assets.firstObject;
-    //                ablum.assetCollection = collection;
-    //                [photoAblumList addObject:ablum];
-    //            }
-    //        }
-    //    }];
+//    //Photos 为我们自动生成的时间分组的相册
+//    PHFetchResult<PHAssetCollection *> *collectionResultMoment = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeMoment subtype:PHAssetCollectionSubtypeAlbumRegular options:nil];
+//    [collectionResultMoment enumerateObjectsUsingBlock:^(PHAssetCollection * _Nonnull collection, NSUInteger idx, BOOL *stop) {
+//        //过滤掉视频和最近删除
+//        if (!([collection.localizedTitle isEqualToString:@"Recently Deleted"] ||
+//              [collection.localizedTitle isEqualToString:@"Videos"])) {
+//            NSArray<PHAsset *> *assets = [self getAssetsInAssetCollection:collection ascending:NO];
+//            if (assets.count > 0) {
+//                PhotoGroupModel *ablum = [[PhotoGroupModel alloc] init];
+//                ablum.title = [self transformAblumTitle:collection.localizedTitle];
+//                ablum.count = assets.count;
+//                ablum.headImageAsset = assets.firstObject;
+//                ablum.assetCollection = collection;
+//                [photoAblumList addObject:ablum];
+//            }
+//        }
+//    }];
 
 //}
 #pragma mark - 获取所有智能相册
@@ -86,16 +86,18 @@ static PhotoTool *sharePhotoTool = nil;
               [collection.localizedTitle isEqualToString:@"Videos"])) {
             NSArray<PHAsset *> *assets = [self getAssetsInAssetCollection:collection ascending:NO];
             if (assets.count > 0) {
+                
                 PhotoGroupModel *ablum = [[PhotoGroupModel alloc] init];
                 ablum.title = collection.localizedTitle;
                 ablum.count = assets.count;
                 ablum.headImageAsset = assets.firstObject;
                 ablum.assetCollection = collection;
                 [photoAblumList addObject:ablum];
+                
             }
         }
     }];
-
+    
     return photoAblumList;
 }
 #pragma mark - 从 iTunes 同步来的相册，以及用户在 Photos 中自己建立的相册
@@ -106,15 +108,17 @@ static PhotoTool *sharePhotoTool = nil;
     [userAlbums enumerateObjectsUsingBlock:^(PHAssetCollection * _Nonnull collection, NSUInteger idx, BOOL * _Nonnull stop) {
         NSArray<PHAsset *> *assets = [self getAssetsInAssetCollection:collection ascending:NO];
         if (assets.count > 0) {
+            
             PhotoGroupModel *ablum = [[PhotoGroupModel alloc] init];
             ablum.title = collection.localizedTitle;
             ablum.count = assets.count;
             ablum.headImageAsset = assets.firstObject;
             ablum.assetCollection = collection;
             [photoAblumList addObject:ablum];
+            
         }
     }];
-
+    
     return photoAblumList;
 }
 /*
@@ -153,6 +157,7 @@ static PhotoTool *sharePhotoTool = nil;
 {
     PHFetchOptions *option = [[PHFetchOptions alloc] init];
     option.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:ascending]];
+    
     PHFetchResult *result = [PHAsset fetchAssetsInAssetCollection:assetCollection options:option];
     return result;
 }
@@ -210,7 +215,7 @@ static PhotoTool *sharePhotoTool = nil;
 }
 
 //  创建新的相册
-- (PHAssetCollection *)createAssetCollection:(NSString *)alumTitle{
+- (PHAssetCollection *)createAssetCollection:(NSString *)alumTitle viewController:(UIViewController *)vc{
     NSMutableArray *albums = [self getAlbums];
     for (PhotoGroupModel *model in albums) {
         if ([model.assetCollection.localizedTitle isEqualToString:alumTitle]) {
@@ -226,115 +231,105 @@ static PhotoTool *sharePhotoTool = nil;
     } error:&error];
     
     if (error) {
-        NSLog(@"创建相册【%@】失败", alumTitle);
+        [self showHint:[NSString stringWithFormat:@"创建相册【%@】失败", alumTitle] viewController:vc];
         return nil;
     }
     
     return [PHAssetCollection fetchAssetCollectionsWithLocalIdentifiers:@[collectionId] options:nil].lastObject;
-
+    
 }
 #pragma mark - 保存图片到系统相册
-- (NSString *)saveImageToPhotosAlum:(UIImage *)img viewcontroller:(UIViewController *)vc isShow:(BOOL)show{
+- (PHObjectPlaceholder *)saveImageToPhotosAlum:(UIImage *)img viewcontroller:(UIViewController *)vc isShow:(BOOL)show{
     
-    __block  NSString *assetLocalIdentifier = nil;
-    [[PHPhotoLibrary sharedPhotoLibrary]performChanges:^{
-        
-        //1.保存图片到相机胶卷中----创建图片的请求
-        assetLocalIdentifier = [PHAssetCreationRequest creationRequestForAssetFromImage:img].placeholderForCreatedAsset.localIdentifier;
-    } completionHandler:^(BOOL success, NSError * _Nullable error) {
-        
+    NSError *error = nil;
+    
+    // 保存相片到相机胶卷
+    __block PHObjectPlaceholder *createdAsset = nil;
+    [[PHPhotoLibrary sharedPhotoLibrary] performChangesAndWait:^{
+        createdAsset = [PHAssetCreationRequest creationRequestForAssetFromImage:img].placeholderForCreatedAsset;
+    } error:&error];
+
         if (show) {
             if(!error) {
                 
-                UIAlertController *alertControl = [UIAlertController alertControllerWithTitle:@"温馨提示" message:@"成功保存到相册" preferredStyle:UIAlertControllerStyleAlert];
-                
-                UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
-                    return ;
-                }];
-                
-                [alertControl addAction:action];
-                
-                [vc presentViewController:alertControl animated:YES completion:nil];
+                [self showHint:@"成功保存到相册" viewController:vc];
                 
             }else{
-                UIAlertController *alertControl = [UIAlertController alertControllerWithTitle:@"提示" message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
                 
-                UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-                    return ;
-                }];
-                
-                [alertControl addAction:action];
-                
-                [vc presentViewController:alertControl animated:YES completion:nil];
+                [self showHint:error.localizedDescription viewController:vc];
                 
             }
             
         }
-        
-        
-    }];
-    return assetLocalIdentifier;
-    
 
+    return createdAsset;
+    
+    
 }
 #pragma mark - 保存图片到自定义相册
 - (void)saveImageToCustomPhotosAlum:(UIImage *)img alumTitle:(NSString *)alumTitle viewcontroller:(UIViewController *)vc{
-
-    PHAssetCollection *createdAssetCollection = [self createAssetCollection:alumTitle];
-    if (createdAssetCollection == nil) {
-        NSLog(@"(创建相簿失败!)");
-        return;
-    }
     
-    NSString *assetLocalIdentifier = [self saveImageToPhotosAlum:img viewcontroller:vc isShow:NO];
-    //根据相册的唯一标识符拿到相册
-    createdCollection = [PHAssetCollection fetchAssetCollectionsWithLocalIdentifiers:@[createdCollectionID] options:nil].firstObject;
-    if (error) {
-        //保存失败
-    }else{
-        //保存成功
-    }
-    
-    // 3.将刚刚添加到"相机胶卷"中的图片到"自己创建相簿"中
-    [[PHPhotoLibrary sharedPhotoLibrary]performChanges:^{
-        
-        //获得图片
-        PHAsset *asset = [PHAsset fetchAssetsWithLocalIdentifiers:@[assetLocalIdentifier] options:nil].lastObject;
-        //添加图片到相簿中的请求
-        PHAssetCollectionChangeRequest *request = [PHAssetCollectionChangeRequest changeRequestForAssetCollection:createdAssetCollection];
-        // 添加图片到相簿
-        [request addAssets:@[asset]];
-    } completionHandler:^(BOOL success, NSError * _Nullable error) {
-        if(success){
-            NSLog(@"保存图片到创建的相簿成功");
-        }else{
-            NSLog(@"保存图片到创建的相簿失败");
+    __block PHAssetCollection *createdAssetCollection = nil;
+    __block PHObjectPlaceholder *createdAsset = nil;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        createdAssetCollection = [self createAssetCollection:alumTitle viewController:vc];
+        if (createdAssetCollection == nil) {
+            NSLog(@"(创建相簿失败!)");
+            return;
         }
-    }];
-}];
-
+        
+        createdAsset = [self saveImageToPhotosAlum:img viewcontroller:vc isShow:NO];
+        NSError *error = nil;
+        // 3.将刚刚添加到"相机胶卷"中的图片到"自己创建相簿"中
+        [[PHPhotoLibrary sharedPhotoLibrary] performChangesAndWait:^{
+            [[PHAssetCollectionChangeRequest changeRequestForAssetCollection:createdAssetCollection] insertAssets:@[createdAsset] atIndexes:[NSIndexSet indexSetWithIndex:0]];
+        } error:&error];
+            if(error){
+                [self showHint:[NSString stringWithFormat:@"保存图片到相册【%@】成功", alumTitle] viewController:vc];
+            }else{
+                [self showHint:error.localizedDescription viewController:vc];
+            }
+    
+    });
+    
 }
 
 - (void)requestAuthorizatio:(UIViewController *)vc comeplete:(void (^)(BOOL))comeplete{    // 判断授权状态
-
+    
     [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
         
-            if (comeplete) {
-                comeplete(status == PHAuthorizationStatusAuthorized);
-            }
-//            NSDictionary *mainInfoDictionary = [[NSBundle mainBundle] infoDictionary];
-//            NSString *appName = [mainInfoDictionary objectForKey:@"CFBundleDisplayName"];
-//            
-//            dispatch_sync(dispatch_get_main_queue(), ^{
-//                MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:vc.navigationController.view animated:YES];
-//                hud.label.text = @"温馨提示";
-//                hud.detailsLabel.text = [NSString stringWithFormat:@"请在设备的\"设置-隐私-照片\"选项中，允许%@访问你的手机相册", appName];
-//                hud.mode = MBProgressHUDModeText;
-//                [hud hideAnimated:YES afterDelay:2.0f];
-//                
-//            });
-       
+        if (comeplete) {
+            comeplete(status == PHAuthorizationStatusAuthorized);
+        }
+        //            NSDictionary *mainInfoDictionary = [[NSBundle mainBundle] infoDictionary];
+        //            NSString *appName = [mainInfoDictionary objectForKey:@"CFBundleDisplayName"];
+        //
+        //            dispatch_sync(dispatch_get_main_queue(), ^{
+        //                MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:vc.navigationController.view animated:YES];
+        //                hud.label.text = @"温馨提示";
+        //                hud.detailsLabel.text = [NSString stringWithFormat:@"请在设备的\"设置-隐私-照片\"选项中，允许%@访问你的手机相册", appName];
+        //                hud.mode = MBProgressHUDModeText;
+        //                [hud hideAnimated:YES afterDelay:2.0f];
+        //
+        //            });
+        
     }];
+    
+}
+
+- (void)showHint:(NSString *)hint viewController:(UIViewController *)vc{
+    
+        UIAlertController *alertControl = [UIAlertController alertControllerWithTitle:@"温馨提示" message:hint preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+            return ;
+        }];
+        
+        [alertControl addAction:action];
+        
+        [vc presentViewController:alertControl animated:YES completion:nil];
    
+
+    
 }
 @end

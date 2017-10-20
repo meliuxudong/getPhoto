@@ -36,7 +36,7 @@
 /**
  * @brief 获取用户所有相册列表
  */
-- (NSMutableArray<PhotoGroupModel *> *)getPhotoAblumList:(UIViewController *)vc;
+- (void)getPhotoAblumList:(void(^)(NSMutableArray<PhotoGroupModel *> * array))block;
 
 /**
  * @brief 获取所有智能相册
@@ -67,7 +67,12 @@
 /**
  * @brief 保存图片到系统相册
  */
-- (NSString *)saveImageToPhotosAlum:(UIImage *)img viewcontroller:(UIViewController *)vc isShow:(BOOL)show;
+- (PHObjectPlaceholder *)saveImageToPhotosAlum:(UIImage *)img viewcontroller:(UIViewController *)vc isShow:(BOOL)show;
+
+/**
+ * @brief 创建新相册
+ */
+- (PHAssetCollection *)createAssetCollection:(NSString *)alumTitle viewController:(UIViewController *)vc;
 
 /**
  * @brief 保存图片到自定义相册

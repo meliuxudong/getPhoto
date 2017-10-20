@@ -23,6 +23,7 @@
         _actionView.isEdit = NO;
         _actionView.isMutiSelect = YES;
         _actionView.delegate = self;
+        _actionView.sourceVC = self;
         _actionView.maxPhotoNumber = 4;
         [self.view addSubview:_actionView];
     }
@@ -66,6 +67,10 @@
         });
 
     }
+    if (array.count > 0) {
+        [[PhotoTool sharePhotoTool]saveImageToCustomPhotosAlum:array[0] alumTitle:@"测试" viewcontroller:self];
+    }
+    
 }
 //remove actionView
 - (void)removeMyActionSheetView{

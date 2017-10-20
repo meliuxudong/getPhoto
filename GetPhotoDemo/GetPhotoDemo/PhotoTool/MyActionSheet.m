@@ -43,7 +43,7 @@
     [alertController addAction:selectPhotoAction];
     [alertController addAction:cancleAction];
     
-    [[self viewController] presentViewController:alertController animated:YES completion:nil];
+    [_sourceVC presentViewController:alertController animated:YES completion:nil];
 
 }
 - (void)removeView{
@@ -75,7 +75,7 @@
                         photoTVC.delegate = self;
                         
                         
-                        [[self viewController].navigationController pushViewController:photoTVC animated:YES];
+                        [_sourceVC.navigationController pushViewController:photoTVC animated:YES];
                         
                     }else{
                         mipc.sourceType =  UIImagePickerControllerSourceTypePhotoLibrary;
@@ -83,7 +83,7 @@
                         mipc.allowsEditing = self.isEdit;//是否可编辑照片
                         mipc.mediaTypes=[NSArray arrayWithObjects:@"public.image",nil];
                         // 设置可用媒体类型
-                        [[self viewController] presentViewController:mipc animated:YES completion:^(void){
+                        [_sourceVC presentViewController:mipc animated:YES completion:^(void){
                             
                         }];
                     }
@@ -112,7 +112,7 @@
             mipc.allowsEditing = self.isEdit;//是否可编辑照片
             mipc.mediaTypes=[NSArray arrayWithObjects:@"public.image",nil];
 
-            [[self viewController] presentViewController:mipc animated:YES completion:^(void){
+            [_sourceVC presentViewController:mipc animated:YES completion:^(void){
                 //        NSLog(@"1");
                 //        NSLog(@"%@",NSHomeDirectory());
             }];
@@ -135,7 +135,7 @@
 }
 - (void)returnImageDelegate:(NSMutableArray *)array{
     [_delegate myActionSheetMutiSelectDelegate:array info:nil];
-    [[self viewController] dismissViewControllerAnimated:YES completion:nil];
+    [_sourceVC dismissViewControllerAnimated:YES completion:nil];
 
 }
 #pragma mark - <UIImagePickerControllerDelegate>代理方法
@@ -153,7 +153,7 @@
         [_delegate myActionSheetMutiSelectDelegate:images info:nil];
         
 
-        [[self viewController] dismissViewControllerAnimated:YES completion:nil];
+        [_sourceVC dismissViewControllerAnimated:YES completion:nil];
 
     }else{
 
@@ -164,7 +164,7 @@
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker{
-    [[self viewController] dismissViewControllerAnimated:YES completion:nil];
+    [_sourceVC dismissViewControllerAnimated:YES completion:nil];
 
 }
 //对图片尺寸进行压缩--

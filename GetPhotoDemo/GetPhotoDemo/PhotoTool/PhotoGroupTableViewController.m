@@ -27,8 +27,15 @@
     [self getPhotoGroup];
 }
 - (void)getPhotoGroup{
-   
-    _photoGroupArray = [[PhotoTool sharePhotoTool]getPhotoAblumList:self];
+   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+       [[PhotoTool sharePhotoTool]getPhotoAblumList:^(NSMutableArray<PhotoGroupModel *> *array) {
+           _photoGroupArray = array;
+       }];
+       dispatch_async(dispatch_get_main_queue(), ^{
+           [self.tableView reloadData];
+       });
+   });
+    
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

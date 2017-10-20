@@ -21,6 +21,7 @@
 @property (nonatomic, assign) BOOL isMutiSelect;//是否允许多选
 @property (nonatomic, assign) NSInteger maxPhotoNumber;
 @property (nonatomic, weak) id<MyActionSheetDelegate>delegate;
+@property (nonatomic, strong) UIViewController *sourceVC;
 - (void)actionShow;
 - (void)removeView;
 -(UIImage*)imageWithImage:(UIImage*)image scaledToSize:(CGSize)newSize;
