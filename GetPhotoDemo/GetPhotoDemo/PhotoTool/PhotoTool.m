@@ -43,14 +43,16 @@ static PhotoTool *sharePhotoTool = nil;
     //    // 判断授权状态
     //    [self requestAuthorizatio:vc];
     //
-    
-    NSMutableArray<PhotoGroupModel *> *photoAblumList = [NSMutableArray array];
-    [photoAblumList addObjectsFromArray:[self getSmartAlbums]];
+//    dispatch_async(dispatch_get_main_queue(), ^{
+        NSMutableArray<PhotoGroupModel *> *photoAblumList = [NSMutableArray array];
+        [photoAblumList addObjectsFromArray:[self getSmartAlbums]];
         
-    [photoAblumList addObjectsFromArray:[self getAlbums]];
+        [photoAblumList addObjectsFromArray:[self getAlbums]];
         
-    
-    if (block) block(photoAblumList);
+        
+        if (block) block(photoAblumList);
+//    });
+   
     
     
 }
@@ -80,7 +82,9 @@ static PhotoTool *sharePhotoTool = nil;
     
     PHFetchResult *smartAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeAlbumRegular options:nil];
     NSMutableArray *photoAblumList = @[].mutableCopy;
-    [smartAlbums enumerateObjectsUsingBlock:^(PHAssetCollection * _Nonnull collection, NSUInteger idx, BOOL *stop) {
+    for (PHAssetCollection *collection in smartAlbums) {
+    
+//    [smartAlbums enumerateObjectsUsingBlock:^(PHAssetCollection * _Nonnull collection, NSUInteger idx, BOOL *stop) {
         //过滤掉视频或最近删除
         if (!(/*[collection.localizedTitle isEqualToString:@"Recently Deleted"] ||*/
               [collection.localizedTitle isEqualToString:@"Videos"])) {
@@ -96,8 +100,8 @@ static PhotoTool *sharePhotoTool = nil;
                 
             }
         }
-    }];
-    
+//    }];
+    }
     return photoAblumList;
 }
 #pragma mark - 从 iTunes 同步来的相册，以及用户在 Photos 中自己建立的相册
@@ -105,7 +109,10 @@ static PhotoTool *sharePhotoTool = nil;
     
     PHFetchResult *userAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:PHAssetCollectionSubtypeSmartAlbumUserLibrary options:nil];
     NSMutableArray *photoAblumList = @[].mutableCopy;
-    [userAlbums enumerateObjectsUsingBlock:^(PHAssetCollection * _Nonnull collection, NSUInteger idx, BOOL * _Nonnull stop) {
+    
+    for (PHAssetCollection *collection in userAlbums) {
+  
+//    [userAlbums enumerateObjectsUsingBlock:^(PHAssetCollection * _Nonnull collection, NSUInteger idx, BOOL * _Nonnull stop) {
         NSArray<PHAsset *> *assets = [self getAssetsInAssetCollection:collection ascending:NO];
         if (assets.count > 0) {
             
@@ -117,8 +124,8 @@ static PhotoTool *sharePhotoTool = nil;
             [photoAblumList addObject:ablum];
             
         }
-    }];
-    
+//    }];
+    }
     return photoAblumList;
 }
 /*
@@ -155,6 +162,7 @@ static PhotoTool *sharePhotoTool = nil;
 
 - (PHFetchResult *)fetchAssetsInAssetCollection:(PHAssetCollection *)assetCollection ascending:(BOOL)ascending
 {
+    
     PHFetchOptions *option = [[PHFetchOptions alloc] init];
     option.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:ascending]];
     
@@ -173,11 +181,15 @@ static PhotoTool *sharePhotoTool = nil;
     
     PHFetchResult *result = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:option];
     
-    [result enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    for (id obj in result) {
+
+    
+//    [result enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         PHAsset *asset = (PHAsset *)obj;
         [assets addObject:asset];
-    }];
-    
+//    }];
+
+    }
     return assets;
 }
 
@@ -187,11 +199,13 @@ static PhotoTool *sharePhotoTool = nil;
     NSMutableArray<PHAsset *> *arr = [NSMutableArray array];
     
     PHFetchResult *result = [self fetchAssetsInAssetCollection:assetCollection ascending:ascending];
-    [result enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    for (id obj in result) {
+   //    [result enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if (((PHAsset *)obj).mediaType == PHAssetMediaTypeImage) {
             [arr addObject:obj];
         }
-    }];
+//    }];
+    }
     return arr;
 }
 
@@ -271,7 +285,7 @@ static PhotoTool *sharePhotoTool = nil;
     
     __block PHAssetCollection *createdAssetCollection = nil;
     __block PHObjectPlaceholder *createdAsset = nil;
-    dispatch_async(dispatch_get_main_queue(), ^{
+//    dispatch_async(dispatch_get_main_queue(), ^{
         createdAssetCollection = [self createAssetCollection:alumTitle viewController:vc];
         if (createdAssetCollection == nil) {
             NSLog(@"(创建相簿失败!)");
@@ -290,7 +304,7 @@ static PhotoTool *sharePhotoTool = nil;
                 [self showHint:error.localizedDescription viewController:vc];
             }
     
-    });
+//    });
     
 }
 
@@ -301,6 +315,7 @@ static PhotoTool *sharePhotoTool = nil;
         if (comeplete) {
             comeplete(status == PHAuthorizationStatusAuthorized);
         }
+    
         //            NSDictionary *mainInfoDictionary = [[NSBundle mainBundle] infoDictionary];
         //            NSString *appName = [mainInfoDictionary objectForKey:@"CFBundleDisplayName"];
         //
@@ -314,6 +329,7 @@ static PhotoTool *sharePhotoTool = nil;
         //            });
         
     }];
+
     
 }
 

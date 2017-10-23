@@ -9,63 +9,30 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "GetPhotoDemo/ViewController.m"
-            timestampString = "530179054.270697"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "60"
-            endingLineNumber = "60"
-            landmarkName = "-myActionSheetMutiSelectDelegate:info:"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[ViewController myActionSheetMutiSelectDelegate:info:]"
-                  moduleName = "GetPhotoDemo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/admin/Documents/GitHub/getPhoto/GetPhotoDemo/GetPhotoDemo/ViewController.m"
-                  timestampString = "530181305.110679"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "60"
-                  endingLineNumber = "60"
-                  offsetFromSymbolStart = "152">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "__55-[ViewController myActionSheetMutiSelectDelegate:info:]_block_invoke"
-                  moduleName = "GetPhotoDemo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/admin/Documents/GitHub/getPhoto/GetPhotoDemo/GetPhotoDemo/ViewController.m"
-                  timestampString = "530181305.112918"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "60"
-                  endingLineNumber = "60"
-                  offsetFromSymbolStart = "32">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "GetPhotoDemo/PhotoTool/PhotoTool.m"
-            timestampString = "530181305.055925"
+            timestampString = "530418210.380885"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "288"
-            endingLineNumber = "288"
+            startingLineNumber = "298"
+            endingLineNumber = "298"
             landmarkName = "-saveImageToCustomPhotosAlum:alumTitle:viewcontroller:"
             landmarkType = "7">
             <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[PhotoTool saveImageToCustomPhotosAlum:alumTitle:viewcontroller:]"
+                  moduleName = "GetPhotoDemo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/admin/Documents/GitHub/getPhoto/GetPhotoDemo/GetPhotoDemo/PhotoTool/PhotoTool.m"
+                  timestampString = "530421464.310102"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "298"
+                  endingLineNumber = "298"
+                  offsetFromSymbolStart = "534">
+               </Location>
                <Location
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
@@ -74,27 +41,12 @@
                   moduleName = "GetPhotoDemo"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/admin/Documents/GitHub/getPhoto/GetPhotoDemo/GetPhotoDemo/PhotoTool/PhotoTool.m"
-                  timestampString = "530181305.116235"
+                  timestampString = "530421464.312417"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "288"
-                  endingLineNumber = "288"
-                  offsetFromSymbolStart = "240">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "__66-[PhotoTool saveImageToCustomPhotosAlum:alumTitle:viewcontroller:]_block_invoke_2"
-                  moduleName = "GetPhotoDemo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/admin/Documents/GitHub/getPhoto/GetPhotoDemo/GetPhotoDemo/PhotoTool/PhotoTool.m"
-                  timestampString = "530181305.117562"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "288"
-                  endingLineNumber = "288"
-                  offsetFromSymbolStart = "60">
+                  startingLineNumber = "298"
+                  endingLineNumber = "298"
+                  offsetFromSymbolStart = "26">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -106,45 +58,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GetPhotoDemo/PhotoTool/PhotoTool.m"
-            timestampString = "530181305.055925"
+            timestampString = "530418210.380885"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "256"
-            endingLineNumber = "256"
-            landmarkName = "-saveImageToPhotosAlum:viewcontroller:isShow:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "GetPhotoDemo/PhotoTool/PhotoTool.m"
-            timestampString = "530181305.055925"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "291"
-            endingLineNumber = "291"
-            landmarkName = "-saveImageToCustomPhotosAlum:alumTitle:viewcontroller:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "GetPhotoDemo/PhotoTool/PhotoTool.m"
-            timestampString = "530181305.055925"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "326"
-            endingLineNumber = "326"
-            landmarkName = "-showHint:viewController:"
-            landmarkType = "7">
+            startingLineNumber = "373"
+            endingLineNumber = "373">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

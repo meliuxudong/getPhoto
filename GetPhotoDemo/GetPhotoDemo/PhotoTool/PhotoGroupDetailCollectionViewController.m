@@ -12,7 +12,7 @@
 #import "MBProgressHUD.h"
 
 @interface PhotoGroupDetailCollectionViewController ()<selectImagDeletage>
-@property (nonatomic ,strong) NSMutableArray *photoArray;
+@property (nonatomic ,strong) __block NSMutableArray *photoArray;
 @property (nonatomic ,strong) IBOutlet UIImageView *showBigPicImageView;
 @property (nonatomic ,strong) IBOutlet UIView *maskView;
 @property (nonatomic ,strong) NSMutableArray *selectPhotoArray;
@@ -29,10 +29,10 @@
     [super viewDidLoad];
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithTitle:@"确定" style:UIBarButtonItemStylePlain target:self action:@selector(confirmBtnClick)];
-    
+    [self initCollectionViewFlowLayout];
     _photoArray = @[].mutableCopy;
     _selectPhotoArray = @[].mutableCopy;
-    
+     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
     NSMutableArray *assetArray = [[PhotoTool sharePhotoTool]getAssetsInAssetCollection:_model.assetCollection ascending:NO];
     for (NSInteger i = 0; i <= assetArray.count - 1; i ++) {
         
@@ -43,7 +43,11 @@
         
         [_photoArray addObject:model];
     }
-    [self initCollectionViewFlowLayout];
+         dispatch_async(dispatch_get_main_queue(), ^{
+             [self.collectionView reloadData];
+         });
+     });
+    
 }
 - (void)initCollectionViewFlowLayout{
     UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];

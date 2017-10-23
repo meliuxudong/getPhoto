@@ -19,6 +19,7 @@
 
 - (MyActionSheet *)actionView{
     if (!_actionView) {
+    
         _actionView = [[MyActionSheet alloc]initWithFrame:self.view.frame];
         _actionView.isEdit = NO;
         _actionView.isMutiSelect = YES;
@@ -26,7 +27,9 @@
         _actionView.sourceVC = self;
         _actionView.maxPhotoNumber = 4;
         [self.view addSubview:_actionView];
+        
     }
+                   
     return _actionView;
 }
 - (void)viewDidLoad{
@@ -57,11 +60,12 @@
     [self removeMyActionSheetView];
     
     if (info) {
-        dispatch_sync(dispatch_get_main_queue(), ^{
+         dispatch_async(dispatch_get_main_queue(), ^{
             MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
             hud.label.text = @"温馨提示";
             hud.detailsLabel.text = info;
             hud.mode = MBProgressHUDModeText;
+       
             [hud hideAnimated:YES afterDelay:2.0f];
             
         });

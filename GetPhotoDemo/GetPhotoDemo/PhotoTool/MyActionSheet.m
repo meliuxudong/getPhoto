@@ -68,7 +68,7 @@
             [[PhotoTool sharePhotoTool]requestAuthorizatio:[self viewController] comeplete:^(BOOL state) {
                 if (state) {
                     if (_isMutiSelect) {
-                        
+                        dispatch_async(dispatch_get_main_queue(), ^{
                         UIStoryboard * storyboard = [UIStoryboard storyboardWithName:@"PhotoGroup" bundle:nil];
                         PhotoGroupTableViewController *photoTVC = [storyboard instantiateViewControllerWithIdentifier:@"PhotoGroupTableViewController"];
                         photoTVC.maxPhotoNumber = self.maxPhotoNumber;
@@ -76,7 +76,7 @@
                         
                         
                         [_sourceVC.navigationController pushViewController:photoTVC animated:YES];
-                        
+                        });
                     }else{
                         mipc.sourceType =  UIImagePickerControllerSourceTypePhotoLibrary;
                         mipc.delegate = self;//委托
